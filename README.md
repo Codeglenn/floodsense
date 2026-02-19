@@ -1,9 +1,9 @@
 # FloodSense — AI-Powered Flood Prediction System
 
-![Java](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-green)
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.3-green)
 ![React](https://img.shields.io/badge/React-18-blue)
-![Python](https://img.shields.io/badge/Python-3.11-yellow)
+![Python](https://img.shields.io/badge/Python-3.12.10-yellow)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
 
 > A full-stack flood risk prediction platform combining real-time weather data,
