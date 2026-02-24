@@ -35,3 +35,9 @@ floodsense/
 └── docs/             # Architecture diagrams, API spec
 
 ```
+cd backend
+mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=devs
+
+python -m venv venv
+venv\Scripts\activate.bat
+python -m app.services.data_fetcher
