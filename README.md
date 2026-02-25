@@ -35,9 +35,18 @@ floodsense/
 └── docs/             # Architecture diagrams, API spec
 
 ```
+## Steps to run Spring boot backend
+```bash
 cd backend
 mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=devs
+```
 
+## Steps to run python ml-service
+```bash
+cd ml-service
 python -m venv venv
 venv\Scripts\activate.bat
+pip install -r requirements.txt
+jupyter notebook
 python -m app.services.data_fetcher
+```

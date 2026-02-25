@@ -26,7 +26,7 @@ class FloodFeatureEngineer:
         df = df.copy().sort_values("time").reset_index(drop=True)
         df["precipitation"] = df["precipitation"].fillna(0)
 
-        # ── 1. Rolling rainfall accumulations ────────────────────
+        # 1. Rolling rainfall accumulations 
         # Most important flood predictors. 72h captures multi-day events.
         df["rainfall_1h"]   = df["precipitation"]
         df["rainfall_3h"]   = df["precipitation"].rolling(3,   min_periods=1).sum()
@@ -37,7 +37,7 @@ class FloodFeatureEngineer:
         df["rainfall_72h"]  = df["precipitation"].rolling(72,  min_periods=1).sum()
         df["rainfall_7d"]   = df["precipitation"].rolling(168, min_periods=1).sum()
 
-        # ── 2. Antecedent Precipitation Index (API) ───────────────
+        # 2. Antecedent Precipitation Index (API) 
         # Classic hydrology metric. API_t = k * (API_{t-1} + P_t)
         # k=0.85 means yesterday's rain still has 85% weight today
         k = 0.85
@@ -46,13 +46,13 @@ class FloodFeatureEngineer:
             api[i] = k * (api[i - 1] + df["precipitation"].iloc[i])
         df["antecedent_precipitation_index"] = api
 
-        # ── 3. Rainfall intensity metrics ─────────────────────────
+        # 3. Rainfall intensity metrics 
         # 30mm/hour burst is more dangerous than 30mm over 24 hours
         df["peak_intensity_6h"]        = df["precipitation"].rolling(6).max().fillna(0)
         df["peak_intensity_24h"]       = df["precipitation"].rolling(24).max().fillna(0)
         df["rainfall_variability_24h"] = df["precipitation"].rolling(24).std().fillna(0)
 
-        # ── 4. Soil moisture features ─────────────────────────────
+        # 4. Soil moisture features
         # Saturated soil cannot absorb more water → all becomes runoff
         sm1 = df["soil_moisture_0_to_7cm"].fillna(
             df["soil_moisture_0_to_7cm"].median()
@@ -65,7 +65,7 @@ class FloodFeatureEngineer:
         df["soil_moisture_change_6h"]  = df["soil_moisture_combined"].diff(6).fillna(0)
         df["soil_moisture_change_24h"] = df["soil_moisture_combined"].diff(24).fillna(0)
 
-        # ── 5. Atmospheric conditions ─────────────────────────────
+        # 5. Atmospheric conditions
         df["temperature"]        = df["temperature_2m"].fillna(
             df["temperature_2m"].median()
         )
@@ -75,11 +75,11 @@ class FloodFeatureEngineer:
         df["pressure_change_6h"] = df["pressure"].diff(6).fillna(0)
         df["pressure_change_24h"]= df["pressure"].diff(24).fillna(0)
 
-        # ── 6. Interaction features ───────────────────────────────
+        # 6. Interaction features
         df["humidity_x_rainfall"] = df["humidity"] * df["rainfall_24h"] / 100
         df["heat_index"]          = df["temperature"] * df["humidity"] / 100
 
-        # ── 7. Temporal features (cyclical encoding) ──────────────
+        # 7. Temporal features (cyclical encoding)
         # Jan (1) and Dec (12) are adjacent months, sin/cos captures this
         df["month"]           = df["time"].dt.month
         df["month_sin"]       = np.sin(2 * np.pi * df["month"] / 12)
@@ -108,7 +108,7 @@ class FloodFeatureEngineer:
 
     def create_labels(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Assigns risk labels using WMO heavy rainfall thresholds.
+        Assigns risk labels using World Meteorological Organization (WMO) heavy rainfall thresholds.
         In production: replace with actual historical flood event records.
         """
         conditions = [
